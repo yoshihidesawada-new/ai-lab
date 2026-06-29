@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ASU AIラボ</title>
+<meta name="description" content="ASU AIラボは、信頼されるAIの開発と応用をテーマに、Spiking Neural Networks、説明可能AI、医用画像処理の研究に取り組んでいます。">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#f7faf8;
+  --bg-soft:#eef6f2;
+  --card:#ffffff;
+  --ink:#12332d;
+  --muted:#60706c;
+  --line:#dbe7e3;
+  --green:#17866f;
+  --green-dark:#0c4a3f;
+  --cyan:#7bc8c2;
+  --shadow:0 24px 70px rgba(21,54,48,.12);
+  --radius:28px;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  font-family:"Noto Sans JP", sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(123,200,194,.20), transparent 34%),
+    radial-gradient(circle at 90% 8%, rgba(233,240,215,.65), transparent 30%),
+    var(--bg);
+  line-height:1.8;
+}
+
+a{
+  color:inherit;
+}
+
+.container{
+  width:min(860px, 90%);
+  margin:0 auto;
+}
+
+.section{
+  padding:76px 0;
+}
+
+.section-head{
+  margin-bottom:30px;
+  text-align:left;
+}
+
+.eyebrow{
+  font-family:"Inter", sans-serif;
+  font-size:.78rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--green);
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+h1,h2,h3{
+  line-height:1.35;
+  letter-spacing:.02em;
+}
+
+h2{
+  font-size:clamp(1.85rem, 4vw, 2.8rem);
+  font-weight:500;
+}
+
+p{
+  color:var(--muted);
+}
+
+.header{
+  position:fixed;
+  inset:0 0 auto 0;
+  z-index:1000;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(219,231,227,.86);
+}
+
+.nav{
+  height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--green-dark);
+}
+
+.logo-text{
+  display:flex;
+  flex-direction:column;
+  line-height:1.15;
+}
+
+.logo-main{
+  font-weight:700;
+  letter-spacing:.04em;
+  font-size:.98rem;
+}
+
+.logo-sub{
+  font-family:"Inter", sans-serif;
+  font-size:.72rem;
+  color:var(--muted);
+  letter-spacing:.08em;
+}
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  font-size:.84rem;
+  white-space:nowrap;
+}
+
+.nav-links a{
+  text-decoration:none;
+  color:#30423e;
+}
+
+.nav-links a:hover{
+  color:var(--green);
+}
+
+.menu-button{
+  display:none;
+  border:0;
+  background:transparent;
+  font-size:1.7rem;
+  color:var(--green-dark);
+}
+
+/* =========================
+   Hero: 今回の画像デザイン寄り
+========================= */
+
+.hero{
+  padding-top:68px;
+  background:#fff;
+}
+
+.hero-visual{
+  min-height:560px;
+  display:flex;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.76) 34%, rgba(255,255,255,.18) 72%),
+    url("assets/hero-main.png");
+  background-size:cover;
+  background-position:center;
+}
+
+.hero-visual::after{
+  content:"";
+  position:absolute;
+  inset:auto 0 0 0;
+  height:120px;
+  background:linear-gradient(180deg, transparent, rgba(247,250,248,.98));
+  pointer-events:none;
+}
+
+.hero-copy{
+  position:relative;
+  z-index:2;
+  width:min(860px, 90%);
+  margin:0 auto;
+  padding:88px 0 96px;
+}
+
+.hero-title{
+  font-size:clamp(2.8rem, 7vw, 5.3rem);
+  font-weight:700;
+  line-height:1.18;
+  color:var(--green-dark);
+  letter-spacing:.04em;
+}
+
+.hero-subtitle{
+  margin-top:18px;
+  font-family:"Inter", sans-serif;
+  font-size:1.18rem;
+  letter-spacing:.12em;
+  color:var(--green);
+}
+
+.hero-lead{
+  margin-top:24px;
+  max-width:600px;
+  font-size:1rem;
+  color:#2f4842;
+}
+
+.hero-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-top:34px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:50px;
+  padding:12px 24px;
+  border-radius:999px;
+  text-decoration:none;
+  border:1px solid transparent;
+  font-weight:600;
+  transition:.25s ease;
+}
+
+.btn-primary{
+  color:white;
+  background:linear-gradient(135deg, var(--green-dark), var(--green));
+  box-shadow:0 14px 38px rgba(47,125,104,.24);
+}
+
+.btn-secondary{
+  background:rgba(255,255,255,.62);
+  border-color:rgba(23,134,111,.55);
+  color:var(--green-dark);
+  backdrop-filter:blur(8px);
+}
+
+.btn:hover{
+  transform:translateY(-2px);
+}
+
+/* =========================
+   Vision以降：前デザイン
+========================= */
+
+.mission-card{
+  padding:40px;
+  border-radius:var(--radius);
+  background:rgba(255,255,255,.78);
+  border:1px solid rgba(255,255,255,.8);
+  box-shadow:var(--shadow);
+}
+
+.mission-card p{
+  font-size:1rem;
+  line-height:2;
+  max-width:760px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:1fr;
+  max-width:720px;
+  margin:0 auto;
+  gap:18px;
+}
+
+.card{
+  position:relative;
+  overflow:hidden;
+  padding:30px;
+  border-radius:var(--radius);
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(219,231,227,.9);
+  box-shadow:0 18px 50px rgba(21,54,48,.08);
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  right:-42px;
+  top:-42px;
+  background:rgba(123,200,194,.28);
+}
+
+.card-number{
+  font-family:"Inter", sans-serif;
+  font-size:.82rem;
+  letter-spacing:.16em;
+  color:var(--green);
+  font-weight:700;
+}
+
+.card h3{
+  margin-top:14px;
+  margin-bottom:14px;
+  font-size:1.45rem;
+  color:var(--green-dark);
+}
+
+.card > *{
+  position:relative;
+  z-index:1;
+}
+
+.research-images{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+  margin:22px 0 6px;
+}
+
+.research-images.two{
+  grid-template-columns:1fr 1fr;
+}
+
+.research-image-frame{
+  position:relative;
+  overflow:hidden;
+  border-radius:20px;
+  background:#eef6f2;
+  border:1px solid var(--line);
+  box-shadow:0 12px 30px rgba(21,54,48,.08);
+}
+
+.research-image-frame::before{
+  content:"";
+  display:block;
+  aspect-ratio:16 / 9;
+}
+
+.research-image{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.research-image.contain{
+  object-fit:contain;
+  padding:12px;
+  background:#f8fbfa;
+}
+
+.research-images.single-compact{
+  max-width:420px;
+  margin:22px auto 8px;
+}
+
+.research-images.single-compact .research-image-frame::before{
+  aspect-ratio:16 / 9;
+}
+
+.keywords{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:20px;
+}
+
+.keyword{
+  font-size:.78rem;
+  padding:5px 9px;
+  border-radius:999px;
+  background:white;
+  border:1px solid var(--line);
+  color:var(--muted);
+}
+
+.policy{
+  background:linear-gradient(180deg, transparent, rgba(237,244,241,.45));
+}
+
+.policy-card{
+  max-width:720px;
+  margin:0 auto;
+  padding:0;
+  background:transparent;
+  color:var(--ink);
+  box-shadow:none;
+  border-radius:0;
+}
+
+.policy-points{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+}
+
+.policy-point{
+  position:relative;
+  padding:26px 28px 26px 30px;
+  border-radius:24px;
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(219,231,227,.9);
+  box-shadow:0 16px 42px rgba(21,54,48,.07);
+  overflow:hidden;
+}
+
+.policy-point strong{
+  display:block;
+  margin-bottom:8px;
+  color:var(--green-dark);
+  font-size:1.08rem;
+  letter-spacing:.03em;
+}
+
+.policy-point p{
+  color:var(--muted);
+  font-size:.96rem;
+  line-height:1.9;
+}
+
+.teacher-card{
+  display:grid;
+  grid-template-columns:150px 1fr;
+  gap:28px;
+  align-items:center;
+  padding:34px;
+  border-radius:var(--radius);
+  background:rgba(255,255,255,.86);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+
+.teacher-photo-wrap{
+  width:150px;
+  height:150px;
+  border-radius:28px;
+  overflow:hidden;
+  background:#eef6f2;
+}
+
+.teacher-photo{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.teacher-body h3{
+  font-size:1.45rem;
+  color:var(--green-dark);
+  margin-bottom:8px;
+}
+
+.teacher-body .btn{
+  margin-top:20px;
+  margin-right:10px;
+}
+
+.teacher-body .btn:last-child{
+  margin-right:0;
+}
+
+.teacher-title{
+  color:var(--green);
+  font-weight:700;
+  margin-bottom:12px;
+}
+
+.teacher-link{
+  margin-top:22px;
+}
+
+.outputs{
+  display:grid;
+  max-width:720px;
+  margin:0 auto;
+  gap:16px;
+}
+
+.output-card{
+  position:relative;
+  display:block;
+  padding:26px 28px;
+  border-radius:24px;
+  background:rgba(255,255,255,.88);
+  border:1px solid var(--line);
+  text-decoration:none;
+  transition:.25s ease;
+}
+
+.output-card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 18px 44px rgba(21,54,48,.10);
+}
+
+.output-main{
+  padding-right:8px;
+}
+
+.output-title{
+  font-size:1.12rem;
+  font-weight:700;
+  line-height:1.55;
+  color:var(--green-dark);
+  letter-spacing:.01em;
+}
+
+.output-authors{
+  margin-top:10px;
+  color:#40544f;
+  font-size:.9rem;
+  line-height:1.6;
+}
+
+.output-meta{
+  color:var(--muted);
+  font-size:.9rem;
+  margin-top:6px;
+}
+
+.output-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:18px;
+  padding-top:14px;
+  border-top:1px solid rgba(219,231,227,.75);
+}
+
+.output-year{
+  padding:0;
+  border-radius:0;
+  background:transparent;
+  font-family:"Inter", sans-serif;
+  color:#8a9a96;
+  font-size:.78rem;
+  font-weight:600;
+  letter-spacing:.10em;
+}
+
+.output-source{
+  color:var(--green);
+  font-family:"Inter", sans-serif;
+  font-size:.84rem;
+  font-weight:700;
+}
+
+.output-card.no-link{
+  cursor:default;
+}
+
+.outputs-more{
+  max-width:720px;
+  margin:24px auto 0;
+}
+
+.more-link{
+  display:inline-flex;
+}
+
+.contact-wrap{
+  display:grid;
+  grid-template-columns:1fr;
+  max-width:720px;
+  margin:0 auto;
+  gap:30px;
+  align-items:start;
+}
+
+.contact-info{
+  padding:34px;
+  border-radius:var(--radius);
+  background:rgba(255,255,255,.82);
+  border:1px solid var(--line);
+}
+
+.contact-info p{
+  margin-top:12px;
+}
+
+.form-card{
+  padding:34px;
+  border-radius:var(--radius);
+  background:white;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+}
+
+.form-row{
+  margin-bottom:18px;
+}
+
+label{
+  display:block;
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  border:1px solid #d7e3df;
+  background:#fbfdfc;
+  border-radius:16px;
+  padding:14px 15px;
+  font:inherit;
+  color:var(--ink);
+  outline:none;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 4px rgba(47,125,104,.10);
+}
+
+textarea{
+  min-height:150px;
+  resize:vertical;
+}
+
+.form-note{
+  font-size:.84rem;
+  color:var(--muted);
+  margin-top:12px;
+}
+
+.form-message{
+  margin-top:14px;
+  color:var(--green-dark);
+  font-weight:600;
+}
+
+.footer{
+  padding:34px 0 26px;
+  background:linear-gradient(180deg, #eef6f2, #e7f1ed);
+  border-top:1px solid var(--line);
+}
+
+.footer-lab{
+  text-align:center;
+  margin-bottom:24px;
+}
+
+.footer-lab strong{
+  display:block;
+  color:var(--green-dark);
+  font-size:1.05rem;
+  letter-spacing:.04em;
+}
+
+.footer-address{
+  margin-top:8px;
+  font-size:.82rem;
+  color:var(--muted);
+  letter-spacing:.02em;
+}
+
+.footer-lab p{
+  margin-top:4px;
+  font-size:.86rem;
+}
+
+.footer-links{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:26px;
+  margin-bottom:22px;
+}
+
+.footer-links a{
+  text-decoration:none;
+  color:var(--green-dark);
+  font-family:"Inter", sans-serif;
+  font-size:.88rem;
+}
+
+.footer-links a::after{
+  content:"↗";
+  margin-left:7px;
+  font-size:.82em;
+  color:var(--green);
+}
+
+.copyright{
+  text-align:center;
+  color:var(--muted);
+  font-size:.82rem;
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .7s ease, transform .7s ease;
+}
+
+.reveal.is-visible{
+  opacity:1;
+  transform:none;
+}
+
+.hp-field{
+  position:absolute;
+  left:-9999px;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
+@media(max-width:920px){
+  .nav-links{
+    position:fixed;
+    inset:68px 0 auto 0;
+    display:none;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:0;
+    padding:18px 5%;
+    background:rgba(255,255,255,.96);
+    border-bottom:1px solid var(--line);
+  }
+
+  .nav-links.is-open{
+    display:flex;
+  }
+
+  .nav-links a{
+    width:100%;
+    padding:13px 0;
+  }
+
+  .menu-button{
+    display:block;
+  }
+
+  .hero-visual{
+    min-height:620px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(255,255,255,.70) 48%, rgba(255,255,255,.18) 100%),
+      url("assets/hero-main.png");
+    background-size:cover;
+    background-position:center;
+  }
+}
+
+@media(max-width:560px){
+  .section{
+    padding:68px 0;
+  }
+
+  .hero-title{
+    font-size:clamp(2.4rem, 13vw, 3.4rem);
+  }
+
+  .hero-actions{
+    flex-direction:column;
+  }
+
+  .btn{
+    width:100%;
+  }
+
+  .mission-card,
+  .policy-card,
+  .form-card,
+  .contact-info{
+    padding:26px;
+  }
+
+  .teacher-card{
+    grid-template-columns:1fr;
+    padding:26px;
+  }
+
+  .teacher-body .btn{
+    margin-right:0;
+  }
+
+  .research-images.two{
+    grid-template-columns:1fr;
+  }
+
+  .research-image-frame::before{
+    aspect-ratio:4 / 3;
+  }
+
+  .research-images.single-compact{
+    max-width:100%;
+  }
+
+  .teacher-photo-wrap{
+    width:130px;
+    height:130px;
+  }
+
+  .output-card{
+    padding:24px;
+  }
+
+  .output-title{
+    font-size:1.04rem;
+  }
+
+  .output-footer{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:6px;
+  }
+
+  .footer-links{
+    gap:16px 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="container nav">
+    <a href="#" class="logo" aria-label="ASU AIラボ トップへ">
+      <span class="logo-text">
+        <span class="logo-main">ASU AIラボ</span>
+        <!-- <span class="logo-sub">Trusted AI Lab</span> -->
+      </span>
+    </a>
+
+    <button class="menu-button" id="menuButton" aria-label="メニューを開く">☰</button>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#top">Home</a>
+      <a href="#mission">Mission</a>
+      <a href="#policy">Policy</a>
+      <a href="#research">Research</a>
+      <a href="#outputs">Outputs</a>
+      <a href="#teacher">Profile</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section id="top" class="hero">
+  <div class="hero-visual">
+    <div class="hero-copy reveal">
+      <h1 class="hero-title">
+        信頼されるAIの<br>
+        開発と応用
+      </h1>
+
+      <div class="hero-subtitle">
+        AI Trusted by Humans and Society
+      </div>
+
+      <p class="hero-lead">
+        説明可能性や省電力性を備えた次世代AIを研究し、医療応用をはじめとする実社会の課題解決に取り組みます。
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#research">研究テーマを見る</a>
+        <a class="btn btn-secondary" href="#outputs">研究成果を見る</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="mission" class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Mission</div>
+      <!-- <h2>社会へ溶け込む次世代AIの実現</h2> -->
+      <h2>今のAIの課題を解決する次世代AIの実現</h2>
+    </div>
+
+    <div class="mission-card reveal">
+      <p>
+        AIの高性能化が進む一方で、AIの課題も顕在化してきています。例えば、
+        ChatGPTなどの生成AIは大規模な計算資源と電力を必要とします。
+        また、プロンプトで出力結果の理由を尋ねたとしても、
+        本当にその理由に基づいて結果を出力したかはわかりません。
+        このような判断根拠の不明確さはAIの制御困難さに繋がり、
+        医療分野など、説明責任が必要な分野への適用を困難にします。
+        本研究室では、これらの既存AIの課題を解決し、人や社会から信頼される次世代AIの実現を目指します。
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="policy" class="section policy">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Research Policy</div>
+      <h2>研究方針</h2>
+    </div>
+
+    <div class="policy-card reveal">
+
+      <div class="policy-points">
+        <div class="policy-point">
+          <strong>素人発想・玄人実行</strong>
+          <p>
+            カーネギーメロン大学の金出武雄先生の言葉です。<br>
+            素朴で本質的な発想を、専門的な知識と技術で丁寧に形にすることを大切にしています。
+          </p>
+        </div>
+
+        <div class="policy-point">
+          <strong>研究はマラソン</strong>
+          <p>
+            澤田の指導教官である名古屋工業大学の本谷秀堅先生の言葉です。<br>
+            研究ではすぐに成果が見えないこともありますが、考え続け、少しずつ前に進む姿勢を大切にしています。
+          </p>
+        </div>
+
+        <div class="policy-point">
+          <strong>ブルーオーシャン戦略</strong>
+          <p>
+            多くの研究者が注目する課題は競争も激しく、いずれ誰かが解決するかもしれません。
+            一方で、まだ取り組む人は少なくても、将来重要になる課題も数多くあります。
+            本研究室では、そのような課題を見つけにいく姿勢を大切にしています。
+          </p>
+        </div>
+
+        <div class="policy-point">
+          <strong>自分の頭で考える</strong>
+          <p>
+            生成AIはとても便利な道具であり、積極的に活用してよいと考えています。
+            ただし、その出力をそのまま受け入れるのではなく、なぜその結果になるのか、
+            本当に正しいのかを理論的・論理的に説明できることを重視します。
+          </p>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</section>
+
+<section id="research" class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Research Themes</div>
+      <h2>研究テーマ</h2>
+    </div>
+
+    <div class="cards">
+
+      <article class="card reveal">
+        <div class="card-number">01 / Sustainability</div>
+        <h3>持続可能AI</h3>
+        <p>
+          人の脳のように省電力で動作するAI、スパイキングニューラルネットを研究しています。
+          例えば、人と同じような効率的な学習方法の実現に興味があります。
+        </p>
+
+        <div class="research-images two">
+          <div class="research-image-frame">
+            <img src="assets/SNN.png" alt="Spiking Neural Networks" class="research-image contain">
+          </div>
+          <div class="research-image-frame">
+            <img src="assets/SNN2.png" alt="SNN research example" class="research-image contain">
+          </div>
+        </div>
+
+        <div class="keywords">
+          <span class="keyword">Spiking Neural Networks</span>
+          <span class="keyword">Neuromorphic Computing</span>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-number">02 / Explainability</div>
+        <h3>説明可能AI</h3>
+        <p>
+          精度を保ちつつ、解釈可能な内部構造を持つAIを研究しています。
+          例えば、ニューロシンボリックAIとの関連性に興味があります。
+        </p>
+
+        <div class="research-images two">
+          <div class="research-image-frame">
+            <img src="assets/gradCAM_orig.png" alt="Original Grad-CAM visualization" class="research-image contain">
+          </div>
+          <div class="research-image-frame">
+            <img src="assets/gradCAM_cpt3.png" alt="Concept-based visualization" class="research-image contain">
+          </div>
+        </div>
+
+        <div class="keywords">
+          <span class="keyword">Concept Bottleneck Models</span>
+          <span class="keyword">Neuro-Symbolic AI</span>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-number">03 / Application</div>
+        <h3>医療応用</h3>
+        <p>
+          信頼されるAIの応用先として、医療分野への適用に興味があります。
+          現在は、網羅的なタンパク質情報をAIで解析し、疾患検知を行うAIプロテオミクスの研究をしています。
+        </p>
+
+        <div class="research-images single-compact">
+          <div class="research-image-frame">
+            <img
+              src="assets/medicalAI.png"
+              alt="Medical AI and AI proteomics"
+              class="research-image contain">
+          </div>
+        </div>
+
+        <div class="keywords">
+          <span class="keyword">AI Proteomics</span>
+          <span class="keyword">Medical AI</span>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-number">04 / Others</div>
+        <h3>その他</h3>
+        <p>
+          AIを使って新規材料を探索する材料インフォマティクスや、
+          コンピュテーショナルフォトグラフィの研究にも取り組んできました。
+          また、ARC-AGI-3のように、現行のAIでは解くのが難しい課題にも興味があります。
+        </p>
+
+        <div class="research-images two">
+          <div class="research-image-frame">
+            <img src="assets/MI.png" alt="Materials Informatics" class="research-image contain">
+          </div>
+          <div class="research-image-frame">
+            <img src="assets/CP.png" alt="Computational Photography" class="research-image contain">
+          </div>
+        </div>
+
+        <div class="keywords">
+          <span class="keyword">Materials Informatics</span>
+          <span class="keyword">Computational Photography</span>
+          <span class="keyword">ARC-AGI-3</span>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section id="outputs" class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Recent Outputs</div>
+      <h2>最新の研究成果</h2>
+    </div>
+
+    <div class="outputs" id="latestPapersList">
+      <div class="output-card no-link reveal is-visible">
+        <div class="output-year">Loading</div>
+        <div>
+          <div class="output-title">最新の論文を読み込んでいます...</div>
+          <div class="output-meta">researchmap</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="outputs-more reveal">
+      <a class="btn btn-secondary more-link"
+        href="https://researchmap.jp/YoshihideSawada/published_papers"
+        target="_blank"
+        rel="noopener">
+        その他の論文はこちら
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="teacher" class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div class="eyebrow">Faculty Profile</div>
+      <h2>教員紹介</h2>
+    </div>
+
+    <div class="teacher-card reveal">
+      <div class="teacher-photo-wrap">
+        <img
+          src="assets/sawada_profile.jpg"
+          alt="澤田 好秀"
+          class="teacher-photo">
+      </div>
+
+      <div class="teacher-body">
+        <h3>澤田 好秀</h3>
+        <p class="teacher-title">
+          脳型AI・医療AI・説明可能AIを中心に研究しています
+        </p>
+
+        <p>
+          パナソニック・アイシン・東大発スタートアップ等でAI研究開発に従事。
+        </p>
+
+        <a
+          class="btn btn-secondary teacher-link"
+          href="https://researchmap.jp/YoshihideSawada/research_experience"
+          target="_blank"
+          rel="noopener">
+          経歴詳細はこちら
+        </a>
+        <a
+          class="btn btn-secondary teacher-link"
+          href="https://www.nature.com/articles/d42473-021-00332-y"
+          target="_blank"
+          rel="noopener">
+          インタビュー記事はこちら(英語)
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section id="contact" class="section">
+  <div class="container contact-wrap">
+
+    <div class="contact-info reveal">
+      <div class="eyebrow">Contact</div>
+      <h2>お問い合わせ</h2>
+      <p>
+        共同研究、進学・研究室配属、講演など気軽にお問い合わせください。
+      </p>
+    </div>
+
+    <div class="form-card reveal">
+      <form
+        id="contactForm"
+        action="https://script.google.com/macros/s/AKfycbzja_YTimv7hEhQ476MZNw2dchYSxZ6-_MixCsSdVxkAjO1fzXARKLs_ma_XuMmPTUa/exec"
+        method="POST"
+        target="hidden_iframe">
+
+        <input type="hidden" name="source" value="index.html">
+        <input type="hidden" id="userAgentInput" name="user_agent" value="">
+        
+        <input type="hidden" id="formStartedAtInput" name="form_started_at" value="">
+
+        <div class="hp-field" aria-hidden="true">
+          <label for="website">Webサイト</label>
+          <input
+            id="website"
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off">
+        </div>
+
+        <div class="form-row">
+          <label for="name">お名前</label>
+          <input id="name" type="text" name="name" autocomplete="name" required>
+        </div>
+
+        <div class="form-row">
+          <label for="email">メールアドレス</label>
+          <input id="email" type="email" name="email" autocomplete="email" required>
+        </div>
+
+        <div class="form-row">
+          <label for="affiliation">ご所属</label>
+          <input id="affiliation" type="text" name="affiliation" autocomplete="organization">
+        </div>
+
+        <div class="form-row">
+          <label for="category">お問い合わせ種別</label>
+          <select id="category" name="category">
+            <option value="">選択してください</option>
+            <option value="研究内容について">研究内容について</option>
+            <option value="学生・進学・研究室配属について">学生・進学・研究室配属について</option>
+            <option value="講演・取材について">講演・取材について</option>
+            <option value="共同研究・技術相談について">共同研究・技術相談について</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="message">お問い合わせ内容</label>
+          <textarea id="message" name="message" required></textarea>
+        </div>
+
+        <button class="btn btn-primary" type="submit">送信する</button>
+
+        <p class="form-message" id="formMessage" aria-live="polite"></p>
+      </form>
+
+      <iframe name="hidden_iframe" style="display:none;"></iframe>
+
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+
+    <div class="footer-lab">
+      <strong>ASU AIラボ</strong>
+      <p class="footer-address">
+        〒444-0005 愛知県岡崎市岡町原山12-5 <a href="https://maps.app.goo.gl/pAj3mF6o7LooGaEz9" target="_blank">[Google Map]</a>
+      </p>
+    </div>
+
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/yoshihide-sawada-4a5317a0/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://orcid.org/0000-0001-7267-8660" target="_blank" rel="noopener">ORCID</a>
+      <a href="https://researchmap.jp/YoshihideSawada" target="_blank" rel="noopener">researchmap</a>
+      <a href="https://scholar.google.com/citations?hl=en&user=6Sh2Ix4AAAAJ&view_op=list_works&sortby=pubdate" target="_blank" rel="noopener">Google Scholar</a>
+    </div>
+
+    <div class="copyright">
+      © 2026 ASU AIラボ
+    </div>
+
+  </div>
+</footer>
+
+<script>
+const RESEARCHMAP_API_URL = "https://script.google.com/macros/s/AKfycbzja_YTimv7hEhQ476MZNw2dchYSxZ6-_MixCsSdVxkAjO1fzXARKLs_ma_XuMmPTUa/exec";
+
+/* =========================
+   Mobile menu
+========================= */
+
+const menuButton = document.getElementById("menuButton");
+const navLinks = document.getElementById("navLinks");
+
+if (menuButton && navLinks) {
+  menuButton.addEventListener("click", () => {
+    navLinks.classList.toggle("is-open");
+  });
+
+  document.querySelectorAll(".nav-links a").forEach(link => {
+    link.addEventListener("click", () => {
+      navLinks.classList.remove("is-open");
+    });
+  });
+}
+
+/* =========================
+   Reveal animation
+========================= */
+
+const revealTargets = document.querySelectorAll(".reveal");
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("is-visible");
+    }
+  });
+}, {
+  threshold: 0.12
+});
+
+revealTargets.forEach(target => observer.observe(target));
+
+/* =========================
+   Contact form
+========================= */
+
+const contactForm = document.getElementById("contactForm");
+const formMessage = document.getElementById("formMessage");
+const userAgentInput = document.getElementById("userAgentInput");
+const formStartedAtInput = document.getElementById("formStartedAtInput");
+
+if (formStartedAtInput) {
+  formStartedAtInput.value = String(Date.now());
+}
+
+if (userAgentInput) {
+  userAgentInput.value = navigator.userAgent;
+}
+
+if (contactForm && formMessage) {
+  contactForm.addEventListener("submit", () => {
+    formMessage.textContent = "送信中です...";
+
+    setTimeout(() => {
+      formMessage.textContent = "送信ありがとうございました。内容を確認いたします。";
+      contactForm.reset();
+
+      if (userAgentInput) {
+        userAgentInput.value = navigator.userAgent;
+      }
+
+      if (formStartedAtInput) {
+        formStartedAtInput.value = String(Date.now());
+      }
+    }, 1200);
+  });
+}
+
+/* =========================
+   Latest papers
+========================= */
+
+function escapeHTML(str) {
+  return String(str || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function loadJSONP(url, params) {
+  return new Promise((resolve, reject) => {
+    const callbackName =
+      "jsonpCallback_" +
+      Date.now() +
+      "_" +
+      Math.random().toString(36).slice(2);
+
+    const query = new URLSearchParams({
+      ...params,
+      callback: callbackName
+    }).toString();
+
+    const separator = url.includes("?") ? "&" : "?";
+    const script = document.createElement("script");
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error("読み込みがタイムアウトしました。"));
+    }, 10000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      delete window[callbackName];
+
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    }
+
+    window[callbackName] = data => {
+      cleanup();
+      resolve(data);
+    };
+
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("researchmap APIを読み込めませんでした。"));
+    };
+
+    script.src = url + separator + query;
+    document.body.appendChild(script);
+  });
+}
+
+function createLatestPaperCard(paper) {
+  const year = escapeHTML(paper.year || "");
+  const title = escapeHTML(paper.title || "Untitled");
+  const authors = escapeHTML(paper.authors || "");
+  const venue = escapeHTML(paper.venue || "");
+  const url = String(paper.url || "").trim();
+
+  const authorsHTML = authors
+    ? `<div class="output-authors">${authors}</div>`
+    : "";
+
+  const venueHTML = venue
+    ? `<div class="output-meta">${venue}</div>`
+    : "";
+
+  const yearHTML = year
+    ? `<div class="output-year">${year}</div>`
+    : "";
+
+  const innerHTML = `
+    <div class="output-main">
+      <div class="output-title">${title}</div>
+      ${authorsHTML}
+      ${venueHTML}
+    </div>
+
+    <div class="output-footer">
+      ${yearHTML}
+      ${url ? `<div class="output-source">詳細を見る ↗</div>` : ""}
+    </div>
+  `;
+
+  if (url) {
+    return `
+      <a class="output-card reveal is-visible"
+         href="${escapeHTML(url)}"
+         target="_blank"
+         rel="noopener">
+        ${innerHTML}
+      </a>
+    `;
+  }
+
+  return `
+    <div class="output-card no-link reveal is-visible">
+      ${innerHTML}
+    </div>
+  `;
+}
+
+async function loadLatestPapers() {
+  const list = document.getElementById("latestPapersList");
+
+  if (!list) {
+    return;
+  }
+
+  try {
+    const data = await loadJSONP(RESEARCHMAP_API_URL, {
+      type: "latest_papers",
+      limit: "3"
+    });
+
+    if (!data.ok || !Array.isArray(data.papers) || data.papers.length === 0) {
+      list.innerHTML = `
+        <div class="output-card no-link reveal is-visible">
+          <div class="output-year">---</div>
+          <div>
+            <div class="output-title">現在表示できる論文情報がありません。</div>
+            <div class="output-meta">researchmap APIの取得結果を確認してください。</div>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = data.papers.map(createLatestPaperCard).join("");
+
+  } catch (error) {
+    console.error(error);
+
+    list.innerHTML = `
+      <div class="output-card no-link reveal is-visible">
+        <div class="output-year">Error</div>
+        <div>
+          <div class="output-title">最新の研究成果を読み込めませんでした。</div>
+          <div class="output-meta">Apps ScriptのURL、デプロイ設定、researchmap APIを確認してください。</div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+loadLatestPapers();
+</script>
+
+</body>
+</html>
